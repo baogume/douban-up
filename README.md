@@ -10,7 +10,7 @@ If you don't already use Composer, you can download the `composer.phar` binary:
 
 Then install the library:
 
-    php composer.phar require baogume/douban-up
+    php composer.phar require baogume/douban-up dev-master
 
 ## Run
     require 'douban_up.php';
