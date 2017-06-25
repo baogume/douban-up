@@ -26,8 +26,8 @@ http://douban.baogume.com/index.php
     $douban->code_key      = '打码账号软件Key';
     $douban->comment       = '顶帖内容';
     // 顶帖url和内容 如果为空则用$douban->comment
-    // 可以是单个帖子的字符串类型 数组可以为每个帖子设置顶贴内容
-    $douban->douban_up_url = [
+    // 可以是单个帖子的字符串类型 数组可以为每个帖子设置顶贴内容
+    $douban->douban_up_url = [
         'https://www.douban.com/group/topic/xxxx/' => 'up1',
         'https://www.douban.com/group/topic/xxxx/' => 'up2',
         'https://www.douban.com/group/topic/xxxx/' => 'up3'
