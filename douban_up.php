@@ -147,7 +147,8 @@ class douban_up
         $urls = $this->douban_up_url;
 
         if (is_string($urls)) {
-            $urls[] = $urls;
+            $temp[$urls] = $this->comment;
+            $urls = $temp;
         }
 
         foreach ($urls as $url => $comment) {
