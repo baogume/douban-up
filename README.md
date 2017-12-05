@@ -11,9 +11,6 @@ If you don't already use Composer, you can download the `composer.phar` binary:
 Then install the library:
 
     php composer.phar require baogume/douban-up dev-master
-   
-## Web Test
-http://douban.baogume.com/index.php
 
 ## Run
     require 'douban_up.php';
