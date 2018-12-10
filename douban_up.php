@@ -263,13 +263,14 @@ class douban_up
                 echo "{$url}出现错误";
                 continue;
             }
+            $cids = array_unique($cids);
             foreach ($cids as $cid) {
                 // https://www.douban.com/j/group/topic/128473095/remove_comment
                 $u = "https://www.douban.com/j/group/topic/{$topicID}/remove_comment";
                 $resp = $this->curl->post($u, ["cid" => $cid, "ck" => $ck]);
                 $json = json_decode($resp->body, true);
-                echo $json['r'] == 1 ? "删除成功\r\n" : "删除失败\r\n";
-		sleep(mt_rand(11, 23));
+                echo $json['r'] == 0 ? "{$cid}删除成功\r\n" : "{$cid}删除失败\r\n";
+		sleep(mt_rand(3, 11));
             }
         }
     }
