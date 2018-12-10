@@ -32,4 +32,4 @@ Then install the library:
     print_r($douban->douban_up());
     
     // 删除评论
-    $douban->deleteComment();
+    // $douban->deleteComment();
