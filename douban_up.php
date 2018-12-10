@@ -224,4 +224,52 @@ class douban_up
         $end_time = (int) microtime(true) - $start_time;
         echo "耗时:{$end_time}s\r\n";
     }
+    
+    public function deleteComment($url = "") {
+        if empty($this->$douban_up_url && empty($url) {
+            echo "帖子为空"
+            return false;
+        }
+        $urls = empty($this->$douban_up_url) ? $url : $this->$douban_up_url;
+        if !is_array($urls) {
+            $urls = [$urls];
+        }
+                 
+        foreach ($urls as $url) {
+            $topicID = "";
+            preg_match('#topic/(\d+)/#is', $url, $topic_match);
+            $topicID = $topic_match[1];
+            if empty($topicID) {
+                echo "{$url}错误";
+                continue;
+            }
+            $response = $this->curl->get($url . '/?start=0#last');
+            // 验证是否登陆
+            if (strpos($response->body, '登录')) {
+                echo "cookie过期，开始重新登陆\r\n";
+                $response = $this->login('', '', $url . '/?start=0#last');
+                if (!$response) {
+                    echo "url:{$url}登陆失败\r\n";
+                    continue;
+                }
+            }
+
+            // 获取所有的评论翻页num
+            preg_match_all('#data-cid="(\d+)"#i', $response->body, $page_match);
+            // 评论post的必要参数
+            preg_match('#<input type="hidden" name="ck" value="(.*?)"/>#i', $response->body, $ck);
+            $cids = $page_match[1];
+            $ck = !empty($ck) ? $ck[1] : '';
+            if empty($cids || empty($cK)) {
+                echo "{$url}出现错误";
+                continue;
+            }
+            foreach ($cids as $cid) {
+                // https://www.douban.com/j/group/topic/128473095/remove_comment
+                $u = "https://www.douban.com/j/group/topic/{$topicID}/remove_comment"
+                $resp = $this->curl->post($u, ["cid" => $cid, "ck" => $ck]);
+                print_r($resp);
+            }
+        }
+    }
 }
