@@ -1,4 +1,4 @@
-# 豆瓣自动顶贴
+# 豆瓣自动顶贴 & 删除评论
 
 ## Installation
 
@@ -30,3 +30,6 @@ Then install the library:
         'https://www.douban.com/group/topic/xxxx/' => 'up3'
     ];
     print_r($douban->douban_up());
+    
+    // 删除评论
+    // $douban->deleteComment();
