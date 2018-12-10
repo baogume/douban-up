@@ -226,20 +226,19 @@ class douban_up
     }
     
     public function deleteComment($url = "") {
-        if empty($this->$douban_up_url && empty($url) {
-            echo "帖子为空"
+        if (empty($this->douban_up_url) && empty($url)) {
+            echo "帖子为空";
             return false;
         }
-        $urls = empty($this->$douban_up_url) ? $url : $this->$douban_up_url;
-        if !is_array($urls) {
+        $urls = empty($this->douban_up_url) ? $url : array_keys($this->douban_up_url);
+        if (!is_array($urls)) {
             $urls = [$urls];
         }
-                 
         foreach ($urls as $url) {
             $topicID = "";
             preg_match('#topic/(\d+)/#is', $url, $topic_match);
             $topicID = $topic_match[1];
-            if empty($topicID) {
+            if (empty($topicID)) {
                 echo "{$url}错误";
                 continue;
             }
@@ -255,20 +254,22 @@ class douban_up
             }
 
             // 获取所有的评论翻页num
-            preg_match_all('#data-cid="(\d+)"#i', $response->body, $page_match);
+            preg_match_all('#data-cid="(\d+)"#i', $response->body, $cids_match);
             // 评论post的必要参数
             preg_match('#<input type="hidden" name="ck" value="(.*?)"/>#i', $response->body, $ck);
-            $cids = $page_match[1];
+            $cids = $cids_match[1];
             $ck = !empty($ck) ? $ck[1] : '';
-            if empty($cids || empty($cK)) {
+            if (empty($cids) || empty($ck)) {
                 echo "{$url}出现错误";
                 continue;
             }
             foreach ($cids as $cid) {
                 // https://www.douban.com/j/group/topic/128473095/remove_comment
-                $u = "https://www.douban.com/j/group/topic/{$topicID}/remove_comment"
+                $u = "https://www.douban.com/j/group/topic/{$topicID}/remove_comment";
                 $resp = $this->curl->post($u, ["cid" => $cid, "ck" => $ck]);
-                print_r($resp);
+                $json = json_decode($resp->body, true);
+                echo $json['r'] == 1 ? "删除成功\r\n" : "删除失败\r\n";
+		sleep(mt_rand(11, 23));
             }
         }
     }
