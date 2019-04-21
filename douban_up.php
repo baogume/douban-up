@@ -27,7 +27,7 @@ class douban_up
     private $token = '';
     private $ck = '';
 
-    private $douban_login_url = 'https://accounts.douban.com/login';
+    private $douban_login_url = 'https://accounts.douban.com/j/mobile/login/basic';
 
     // 顶帖URL 可以是数组
     public $douban_up_url;
@@ -61,7 +61,13 @@ class douban_up
         preg_match('#value="(.*?):en"/>#', $response->body, $match);
         preg_match('#id="captcha_image" src="(.*?)"#i', $response->body, $captcha_url);
         $token = $code = '';
-        $post_str = 'source=None&redir=https%3A%2F%2Fwww.douban.com&form_email='.$username.'&form_password='.$password.'&login=%E7%99%BB%E5%BD%95';
+        $post = [
+            "ck" => "",
+            "name" => $this->username,
+            "password" => $this->password,
+            "remember" => false,
+            "ticket" => ""
+        ];
         if (!empty($match)  && !empty($captcha_url)) {
             echo "登陆有验证码\r\n";
             $captcha_url = $captcha_url[1];
@@ -72,12 +78,13 @@ class douban_up
                 echo $e->getMessage() . "\r\n";
                 return false;
             }
-            $post_str = 'source=None&redir=https%3A%2F%2Fwww.douban.com&form_email='.$username.'&form_password='.$password.'&login=%E7%99%BB%E5%BD%95&captcha-id='.$token.'%3Aen&captcha-solution='.$code;
+            exit(1);
         }
 
         $this->curl->options[CURLOPT_FOLLOWLOCATION] = true;
-        $response = $this->curl->post($this->douban_login_url, $post_str);
-        if (strpos($response->body, '个人主页') !== false && strpos($response->body, '退出') !== false ) {
+        $response = $this->curl->post($this->douban_login_url, $post);
+        $res = json_decode($response->body, true);
+        if ($res['status'] == "success") {
             echo "登陆成功\r\n";
             if ($url) {
                 return $this->curl->get($url);
